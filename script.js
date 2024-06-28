@@ -4,26 +4,45 @@ const outputNum = document.querySelector("#output");
 const outputDiv = document.querySelector(".final-output");
 
 convertBtn.addEventListener("click", () => {
+    const input = inputNum.value.trim();
     const strToNum = parseInt(inputNum.value);
-    const spanEl = document.createElement("span");
+    const existingSpan = outputDiv.querySelector("span");
+
+    if (existingSpan) {
+        existingSpan.remove();
+    }
+
+    // Validation checks
     if (inputNum.value === "") {
         outputNum.textContent = "Please enter a valid number";
         return;
-    } else if (!numeralConverter(strToNum)) {
-        if (inputNum.value <= 0) {
-            outputNum.textContent =
-                "Please enter a number greater than or equal to 1";
-            return;
-        } else {
-            outputNum.textContent =
-                "Please enter a number less than or equal to 3999";
-            return;
-        }
-    } else {
-        const resNum = numeralConverter(strToNum);
-        spanEl.textContent = `${resNum}`;
-        outputDiv.appendChild(spanEl);
     }
+
+    // Number validation
+    const numberPattern = /^-?[0-9]+$/;
+    if (!numberPattern.test(input)) {
+        outputNum.textContent = "Please enter only numbers";
+        return;
+    }
+
+    // Range validation
+    if (strToNum <= 0) {
+        outputNum.textContent =
+            "Please enter a number greater than or equal to 1";
+        return;
+    } else if (strToNum > 3999) {
+        outputNum.textContent =
+            "Please enter a number less than or equal to 3999";
+        return;
+    }
+
+    // Conversion
+    const resNum = numeralConverter(strToNum);
+
+    outputNum.textContent = "Output:";
+    const spanEl = document.createElement("span");
+    spanEl.textContent = `${resNum}`;
+    outputDiv.appendChild(spanEl);
 });
 
 const numeralConverter = (num) => {
